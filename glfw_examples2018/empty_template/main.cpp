@@ -10,6 +10,8 @@
 const int width_window = 640;
 const int height_window = 640;
 
+
+double x = 0, y = 0;//key input으로 그림을 움직이기 위한 x y 값.
 void drawFilledCircle(GLfloat x, GLfloat y, GLfloat radius) {
 	//속에 색이 찬 원을 그린다.
 	int i;
@@ -48,11 +50,10 @@ void drawFilledEllipse(GLfloat x, GLfloat y, GLfloat radius) {
 	glEnd();
 }
 
-void parabola() {
+void parabola(GLfloat midX,GLfloat midY) {
 	//입모양을 그리는 함수.
 	//포물선을 이용하였다.
-	GLfloat midY = -0.25;
-	GLfloat midX = 0.0;
+	
 
 	GLfloat y = 0;
 
@@ -68,6 +69,28 @@ void parabola() {
 	glEnd();
 	glFlush();
 }
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)//key입력을 받아 실행할 기능
+{
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)//위로 이동
+	{
+		y += 0.05;
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)//아래로이동
+	{
+		y -= 0.05;
+	}
+	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)//우로 이동
+	{
+		x += 0.05;
+	}
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)//좌로 이동
+	{
+		x -= 0.05;
+	}
+
+}
+
 int main(void)
 {
 	GLFWwindow *window = nullptr;
@@ -96,7 +119,7 @@ int main(void)
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 	//glOrtho(0, 1, 0, 1, -1.0, 1.0);
-
+	glfwSetKeyCallback(window, key_callback);
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -107,13 +130,13 @@ int main(void)
 		//glBegin(GL_LINES);
 
 		glColor3f(0.0f, 0.0f, 0.0f);
-		drawFilledCircle(0, 0, 0.5);
+		drawFilledCircle(0+x, 0+y, 0.5);//검정색 테두리
 		glColor3f(1.0f, 1.0f, 0.0f);
-		drawFilledCircle(0, 0, 0.48);
+		drawFilledCircle(0+x, 0+y, 0.48);//노란색 속
 		glColor3f(0.0f, 0.0f, 0.0f);
-		drawFilledEllipse(0.15, 0.15, 0.1);
-		drawFilledEllipse(-0.15, 0.15, 0.1);
-		parabola();
+		drawFilledEllipse(0.15+x, 0.15+y, 0.1);//오른쪽 눈
+		drawFilledEllipse(-0.15+x, 0.15+y, 0.1);//왼쪽 눈
+		parabola(0.0+x,-0.25+y);//입
 
 		//glEnd();
 
